@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calypso</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/form.js"></script>
+</head>
+<body class="flex justify-center bg-slate-50">
+<div id="loader">Loading...</div>
+<div id="content" class="hidden border rounded p-10 mt-20 bg-slate-100 divide-y divide-solid">
+    <div class="pb-5">
+        <h3 id="description" class="text-2xl font-bold mb-5">Loading...</h3>
+        <div>
+            <span class="font-bold">Fiat amount: </span>
+            <span id="fiat_amount"></span>
+        </div>
+    </div>
+    <div class="py-5">
+        <div>
+            <div class="py-2">
+                <p class="font-bold">Amount to pay:</p>
+                <div class="flex justify-between items-end gap-5">
+                    <div>
+                        <span id="amount"></span><span id="currency"></span>
+                    </div>
+                    <button onclick="copyText('amount')"
+                            class="bg-sky-500 py-1 px-2 border rounded text-slate-50 hover:drop-shadow-md">
+                        Copy amount
+                    </button>
+                </div>
+            </div>
+            <div class="py-2">
+                <p class="font-bold">Address:</p>
+                <div class="flex justify-between items-end gap-5">
+                    <span id="walletAddress"></span>
+                    <button onclick="copyText('walletAddress')"
+                            class="bg-sky-500 py-1 px-2 border rounded text-slate-50 hover:drop-shadow-md">Copy address
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-center">
+        <div>
+            <h4 class="text-xl font-bold text-center my-5">or scan QR code</h4>
+            <img id="qr_img" class="qr-code"
+                 src=""
+                 alt="QR Code">
+        </div>
+    </div>
+    <script>
+      function copyText(elementId) {
+        var copyText = document.getElementById(elementId);
+        var textArea = document.createElement("textarea");
+        textArea.value = copyText.innerText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        textArea.remove();
+      }
+    </script>
+</div>
+</body>
+</html>
+
