@@ -8,8 +8,6 @@ Replace ```<YOUR_API_KEY>``` & ```<YOUR_CLIENT_SECRET>``` ```<YOUR_ACCOUNT>``` b
 
 ## Run
 
-Replace <YOUR_ACCOUNT> by your real account id.
-
 ### 1. Run  ```yarn start``` in terminal
 
 ### 2. Open http://localhost:8080 in browser
