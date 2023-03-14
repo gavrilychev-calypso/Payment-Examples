@@ -1,0 +1,4 @@
+include:
+  - project: ${CI_TEMPLATES_REPO}
+    ref: ${CI_TEMPLATES_BRANCH}
+    file: 'microservices.yml'
