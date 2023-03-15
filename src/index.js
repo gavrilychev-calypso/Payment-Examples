@@ -1,9 +1,10 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
-const { getInvoice, getWidget, configure } = require('./utils.js');
+const { getInvoice, createInvoice, createWidget, configure } = require('./utils.js');
 
 const getPath = (relativePath) => {
   return path.resolve(__dirname, relativePath);
@@ -13,6 +14,7 @@ configure();
 const app = express();
 
 app.use(express.static(getPath('../static')));
+app.use(cookieParser());
 
 const {
   PORT = 3000,
@@ -39,18 +41,35 @@ app.get('/payment-form', async (req, res) => {
 });
 
 app.get('/invoice', async (req, res) => {
-  const invoice = await getInvoice();
+  let invoiceKey = req.cookies['INVOICE_KEY'];
+  const invoice = invoiceKey
+    ? await getInvoice(invoiceKey)
+    : await createInvoice();
+  if (!invoiceKey) {
+    res.cookie('INVOICE_KEY', invoice.idempotencyKey);
+  }
   res.json(invoice);
 });
 
 app.get('/payment-widget', async (req, res) => {
-  const widget = await getWidget();
-  res.redirect(`${process.env.CALYPSO_PAY_URL}pay?widgetKey=${widget.idempotencyKey}`);
+  let widgetKey = req.cookies['WIDGET_KEY'];
+  if (!widgetKey) {
+    const widget = await createWidget();
+    res.cookie('WIDGET_KEY', widget.idempotencyKey);
+    widgetKey = widget.idempotencyKey;
+  }
+  res.redirect(`${process.env.CALYPSO_PAY_URL}pay?widgetKey=${widgetKey}`);
 });
 
 app.get('/payment-link', async (req, res) => {
-  const invoice = await getInvoice();
-  res.redirect(`${process.env.CALYPSO_PAY_URL}invoice/${invoice.idempotencyKey}`);
+  let invoiceKey = req.cookies['INVOICE_KEY'];
+  if (!invoiceKey) {
+    const invoice = await createInvoice();
+    res.cookie('INVOICE_KEY', invoice.idempotencyKey);
+    invoiceKey = invoice.idempotencyKey;
+  }
+  res.redirect(`${process.env.CALYPSO_PAY_URL}invoice/${invoiceKey}`);
 });
+
 
 app.listen(PORT, () => console.log('Server started at http://localhost:' + PORT));

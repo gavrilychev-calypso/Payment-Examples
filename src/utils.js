@@ -17,7 +17,7 @@ const widgetCreatePayload = {
   description: 'Account top-up',
 };
 
-const getInvoice = async () => {
+const createInvoice = async () => {
   const response = await axios.post(
     `invoice/single-fiat/create`,
     {
@@ -28,7 +28,19 @@ const getInvoice = async () => {
   );
   return response.data;
 };
-const getWidget = async () => {
+
+const getInvoice = async (idempotencyKey) => {
+  const response = await axios.post(
+    `invoice`,
+    {
+      account: process.env.ACCOUNT,
+      timestamp: Date.now(),
+      payload: { idempotencyKey },
+    },
+  );
+  return response.data;
+};
+const createWidget = async () => {
   const response = await axios.post(
     `payment-widget/single-fiat/create`,
     {
@@ -66,6 +78,7 @@ const configure = () => {
 
 module.exports = {
   configure,
-  getWidget,
   getInvoice,
+  createWidget,
+  createInvoice,
 };
