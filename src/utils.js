@@ -29,17 +29,6 @@ const createInvoice = async () => {
   return response.data;
 };
 
-const getInvoice = async (idempotencyKey) => {
-  const response = await axios.post(
-    `invoice`,
-    {
-      account: process.env.ACCOUNT,
-      timestamp: Date.now(),
-      payload: { idempotencyKey },
-    },
-  );
-  return response.data;
-};
 const createWidget = async () => {
   const response = await axios.post(
     `payment-widget/single-fiat/create`,
@@ -78,7 +67,6 @@ const configure = () => {
 
 module.exports = {
   configure,
-  getInvoice,
   createWidget,
   createInvoice,
 };
